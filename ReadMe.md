@@ -13,52 +13,9 @@ a.需自定义UserDetailsService
 @Service
 public class UserServiceDetail implements UserDetailsService{
 
-
-    @Autowired
-    private RedisTemplate redisTemplate;
-
-    @Autowired
-    private WpPersonService wpPersonService;
-
-
-    @Autowired
-	private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private WpPersonRepository wpPersonRepository;
-
-    //用户名，密码验证
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Integer userId = null;
-        WpPerson wpPerson = null;
-        Integer mdTypeId = null;
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        if(request.getParameter("userId") != null && !"".equals(request.getParameter("userId"))){
-            userId  = Integer.valueOf(request.getParameter("userId"));
-        }
-        if(request.getParameter("mdTypeId") != null && !"".equals(request.getParameter("mdTypeId"))){
-            mdTypeId  = Integer.valueOf(request.getParameter("mdTypeId"));
-        }
-        wpPerson = wpPersonService.findByMixId(userId,"userId");
-        if (wpPerson == null){
-           return null;
-        }
-        //登录用户key为 oauthUser:58:userId (58为系统号)
-        String userKey = String.format("%s:%s:%s",mdTypeId, RedisPrefixConstant.OAUTH_USER,userId);
-        //判断redis里是否已经存在该key
-        boolean flag = redisTemplate.opsForHash().hasKey(RedisKeyConstant.HASH_OAUTH_LOGINPERSON, userKey);
-        if (!flag){
-            return null;
-        }
-        LoginPersonVo loginPersonVo = FastJsonRedisUtils.redisMapToBean(redisTemplate,LoginPersonVo.class,RedisKeyConstant.HASH_OAUTH_LOGINPERSON,userKey);
-        if (loginPersonVo == null){
-            return null;
-        }
-        wpPerson.setPassword(loginPersonVo.getPassword());
-        wpPerson.setMdTypeId(loginPersonVo.getMdTypeId());
-
-        return wpPerson;
+ 
+ 
+        return null;
     }
 
     
@@ -128,7 +85,7 @@ sep:
 
 3.增加oauth2异常处理器
 
-
+sdada
 
 
 
